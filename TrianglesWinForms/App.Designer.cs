@@ -33,7 +33,6 @@ namespace TrianglesWinForms
             this.ColorPickButton = new System.Windows.Forms.Button();
             this.OutputLabel = new System.Windows.Forms.Label();
             this.ImportButton = new System.Windows.Forms.Button();
-            this.colorDialog1 = new System.Windows.Forms.ColorDialog();
             this.panel1.SuspendLayout();
             this.SuspendLayout();
             // 
@@ -45,7 +44,7 @@ namespace TrianglesWinForms
             this.Canvas.Location = new System.Drawing.Point(100, 0);
             this.Canvas.Margin = new System.Windows.Forms.Padding(2);
             this.Canvas.Name = "Canvas";
-            this.Canvas.Size = new System.Drawing.Size(825, 696);
+            this.Canvas.Size = new System.Drawing.Size(825, 664);
             this.Canvas.TabIndex = 3;
             this.Canvas.Paint += new System.Windows.Forms.PaintEventHandler(this.Canvas_Paint);
             this.Canvas.Resize += new System.EventHandler(this.Canvas_Resize);
@@ -63,7 +62,7 @@ namespace TrianglesWinForms
             this.panel1.MinimumSize = new System.Drawing.Size(100, 0);
             this.panel1.Name = "panel1";
             this.panel1.Padding = new System.Windows.Forms.Padding(10);
-            this.panel1.Size = new System.Drawing.Size(100, 696);
+            this.panel1.Size = new System.Drawing.Size(100, 664);
             this.panel1.TabIndex = 0;
             // 
             // ColorPickButton
@@ -71,7 +70,7 @@ namespace TrianglesWinForms
             this.ColorPickButton.AutoSize = true;
             this.ColorPickButton.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
             this.ColorPickButton.Dock = System.Windows.Forms.DockStyle.Bottom;
-            this.ColorPickButton.Location = new System.Drawing.Point(10, 640);
+            this.ColorPickButton.Location = new System.Drawing.Point(10, 608);
             this.ColorPickButton.Margin = new System.Windows.Forms.Padding(0);
             this.ColorPickButton.Name = "ColorPickButton";
             this.ColorPickButton.Size = new System.Drawing.Size(80, 23);
@@ -95,7 +94,7 @@ namespace TrianglesWinForms
             this.ImportButton.AutoSize = true;
             this.ImportButton.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
             this.ImportButton.Dock = System.Windows.Forms.DockStyle.Bottom;
-            this.ImportButton.Location = new System.Drawing.Point(10, 663);
+            this.ImportButton.Location = new System.Drawing.Point(10, 631);
             this.ImportButton.Margin = new System.Windows.Forms.Padding(0);
             this.ImportButton.Name = "ImportButton";
             this.ImportButton.Size = new System.Drawing.Size(80, 23);
@@ -109,7 +108,7 @@ namespace TrianglesWinForms
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.SystemColors.Control;
-            this.ClientSize = new System.Drawing.Size(925, 696);
+            this.ClientSize = new System.Drawing.Size(925, 664);
             this.Controls.Add(this.Canvas);
             this.Controls.Add(this.panel1);
             this.Location = new System.Drawing.Point(15, 15);
@@ -121,7 +120,6 @@ namespace TrianglesWinForms
             this.ResumeLayout(false);
             this.PerformLayout();
         }
-        private System.Windows.Forms.ColorDialog colorDialog1;
         private System.Windows.Forms.Button ColorPickButton;
         private System.Windows.Forms.Label OutputLabel;
         private System.Windows.Forms.Button ImportButton;

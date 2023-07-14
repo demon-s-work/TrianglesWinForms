@@ -20,6 +20,7 @@ namespace TrianglesWinForms.Forms
             var fileDialog = new OpenFileDialog();
             fileDialog.Multiselect = false;
             fileDialog.Filter = FileFilter;
+            fileDialog.InitialDirectory = Directory.GetCurrentDirectory();
             List<string> imported = new List<string>();
             var dialResult = fileDialog.ShowDialog();
             if (dialResult == DialogResult.OK)
