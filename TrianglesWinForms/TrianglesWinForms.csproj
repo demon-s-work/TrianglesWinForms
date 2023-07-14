@@ -101,5 +101,10 @@
     <ItemGroup>
       <Folder Include="Extensions" />
     </ItemGroup>
+    <ItemGroup>
+      <Content Include="Input\crosses.txt" />
+      <Content Include="Input\shaked.txt" />
+      <Content Include="Input\valid.txt" />
+    </ItemGroup>
     <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>
