@@ -78,7 +78,7 @@ namespace TrianglesWinForms
             this.ColorPickButton.TabIndex = 2;
             this.ColorPickButton.Text = "Pick color";
             this.ColorPickButton.UseVisualStyleBackColor = true;
-            this.ColorPickButton.Click += new System.EventHandler(this.ColorPickClick);
+            this.ColorPickButton.Click += new System.EventHandler(this.ColorPick_Click);
             // 
             // OutputLabel
             // 
@@ -102,7 +102,7 @@ namespace TrianglesWinForms
             this.ImportButton.TabIndex = 0;
             this.ImportButton.Text = "Import";
             this.ImportButton.UseVisualStyleBackColor = true;
-            this.ImportButton.Click += new System.EventHandler(this.LoadTriangles_Click);
+            this.ImportButton.Click += new System.EventHandler(this.ImportButton_Click);
             // 
             // App
             // 

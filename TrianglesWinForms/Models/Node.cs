@@ -1,21 +1,17 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Drawing;
-using System.Drawing.Text;
-using System.Runtime.CompilerServices;
 using System.Windows.Forms;
 
 namespace TrianglesWinForms.Models
 {
-    public class Node<TShape> : CovariantNode<TShape, TShape> where TShape : AbstractShape
-    {
-    }
-
-    public class CovariantNode<TShape, TNodeShape> where TShape : AbstractShape where TNodeShape : AbstractShape
+    public class Node<TShape> where TShape : AbstractPolygon
     {
         public TShape Content { get; set; }
-        public List<Node<TNodeShape>> Childs { get; set; } = new List<Node<TNodeShape>>();
-
+        public List<Node<TShape>> Childs { get; set; } = new List<Node<TShape>>();
+        
+        public int Depth => CountDepth(1);
+        
         public void Paint(Color baseColor)
         {
             Content.Color = baseColor;
@@ -24,8 +20,6 @@ namespace TrianglesWinForms.Models
                 child.Paint(ControlPaint.Dark(baseColor, 0.1f));
             }
         }
-
-        public int Depth => CountDepth(1);
         
         private int CountDepth(int curDepth)
         {

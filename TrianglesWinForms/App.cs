@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Drawing;
 using System.Threading.Tasks;
 using System.Windows.Forms;
@@ -15,19 +14,20 @@ namespace TrianglesWinForms
             InitializeComponent();
         }
 
-        private CovariantNode<CanvasShape, Triangle> _rootNode;
+        private Node<AbstractPolygon> _rootNode;
         private Color _baseColor = Color.Pink;
 
-        private void LoadTriangles_Click(object sender, EventArgs e)
+        private void ImportButton_Click(object sender, EventArgs e)
         {
+            ClearCanvas();
             var inputService = new InputService();
             inputService.OnError += (o, s) => {
                 ShowOutput(s);
             };
 
             var arrangeService = new ArrangeService();
-            arrangeService.OnError += ArrangeServiceOnOnError;
-            arrangeService.OnComplete += ArrangeServiceOnOnComplete;
+            arrangeService.OnError += ArrangeService_Error;
+            arrangeService.OnComplete += ArrangeService_Complete;
 
             var rawData = inputService.GetUserInput();
             if (rawData != null)
@@ -39,7 +39,7 @@ namespace TrianglesWinForms
             }
         }
 
-        private void ArrangeServiceOnOnComplete(object sender, CovariantNode<CanvasShape, Triangle> node)
+        private void ArrangeService_Complete(object sender, Node<AbstractPolygon> node)
         {
             _rootNode = node;
             _rootNode.Paint(_baseColor);
@@ -50,7 +50,13 @@ namespace TrianglesWinForms
             ShowOutput($"Hues count: {hues}");
         }
 
-        private void ArrangeServiceOnOnError(object sender, EventArgs e)
+        private void ClearCanvas()
+        {
+            _rootNode = null;
+            Canvas.Refresh();
+        }
+
+        private void ArrangeService_Error(object sender, EventArgs e)
         {
             ShowOutput("ERROR");
         }
@@ -68,8 +74,8 @@ namespace TrianglesWinForms
             {
                 return;
             }
-            var xAspect = (float)Canvas.Height / _rootNode.Content.H;
-            var yAspect = (float)Canvas.Width / _rootNode.Content.W;
+            var xAspect = (float)Canvas.Height / ((CanvasPolygon)_rootNode.Content).H;
+            var yAspect = (float)Canvas.Width / ((CanvasPolygon)_rootNode.Content).W;
             _rootNode.DrawScaled(e.Graphics, Math.Min(xAspect, yAspect));
         }
 
@@ -77,17 +83,16 @@ namespace TrianglesWinForms
         {
             Canvas.Refresh();
         }
-        
-        private void ColorPickClick(object sender, EventArgs e)
+
+        private void ColorPick_Click(object sender, EventArgs e)
         {
             var d = new ColorDialog();
             if (d.ShowDialog() == DialogResult.OK)
             {
                 _baseColor = d.Color;
             }
-            _rootNode.Paint(_baseColor);
+            _rootNode?.Paint(_baseColor);
             Canvas.Refresh();
         }
     }
-
 }

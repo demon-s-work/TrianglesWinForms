@@ -1,127 +1,109 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Drawing;
+using System.Drawing.Imaging;
+using System.Linq;
+using System.Windows.Forms;
 using TrianglesWinForms.Models;
 namespace TrianglesWinForms.Services
 {
     public class ArrangeService
     {
         public event EventHandler OnError;
-        public event EventHandler<CovariantNode<CanvasShape,Triangle>>OnComplete;
-        public void Arrange(List<Triangle> triangles)
+        public event EventHandler<Node<AbstractPolygon>> OnComplete;
+        public void Arrange(List<Triangle> polygons)
         {
-            if (triangles == null)
+            if (polygons == null)
             {
                 return;
             }
 
-            var root = new Node<Triangle>()
+            var root = new Node<AbstractPolygon>
             {
-                Content = triangles[0]
+                Content = new CanvasPolygon()
             };
-
-            foreach (var tr in triangles)
+            var id = 0;
+            foreach (var pl in polygons)
             {
-                if (tr.IsInside(root.Content))
-                {
-                    var localRoot = root;
-                    var nodeState = NodeState.NotArranged;
-                    while (localRoot.Childs.Count > 0 || nodeState == NodeState.LocalRootChanged)
-                    {
-                        nodeState = NodeState.NotArranged;
-                        foreach (var rootChild in localRoot.Childs)
-                        {
-                            if (tr.IsInside(rootChild.Content))
-                            {
-                                localRoot = rootChild;
-                                nodeState = NodeState.LocalRootChanged;
-                                break;
-                            }
-                            if (rootChild.Content.IsInside(tr))
-                            {
-                                localRoot.Childs.Remove(rootChild);
-                                localRoot.Childs.Add(new Node<Triangle>
-                                {
-                                    Content = tr,
-                                    Childs = { rootChild }
-                                });
-
-                                nodeState = NodeState.Arranged;
-                                break;
-                            }
-                            if (rootChild.Content.IsCrosses(tr))
-                            {
-                                Error();
-                                return;
-                            }
-                        }
-
-                        if (nodeState == NodeState.Arranged)
-                        {
-                            break;
-                        }
-
-                        if (nodeState == NodeState.LocalRootChanged)
-                        {
-                            continue;
-                        }
-
-                        localRoot.Childs.Add(new Node<Triangle>
-                        {
-                            Content = tr
-                        });
-                        break;
-                    }
-                }
-                else if (root.Content.IsInside(tr))
-                {
-                    var newRoot = new Node<Triangle>
-                    {
-                        Childs = new List<Node<Triangle>> { root },
-                        Content = tr
-                    };
-
-                    root = newRoot;
-                }
-                else if (root.Content.IsCrosses(tr))
+                if (!ArrangePolygon(root, pl))
                 {
                     Error();
                     return;
                 }
             }
-            
-            var canvasNode = new CovariantNode<CanvasShape, Triangle>()
-            {
-                Content = GetBoundingBox(root.Content),
-                Childs = new List<Node<Triangle>> { root }
-            };
-
-            Complete(canvasNode);
+            root.Content = GetBoundingBox(root);
+            Complete(root);
         }
-        private void Complete(CovariantNode<CanvasShape,Triangle> root)
+
+        private bool ArrangePolygon(Node<AbstractPolygon> node, AbstractPolygon polygon)
         {
-            if (OnComplete != null)
+            if (node.Childs.Count == 0)
             {
-                OnComplete.Invoke(this, root);
+                node.Childs.Add(new Node<AbstractPolygon>
+                {
+                    Content = polygon
+                });
+                return true;
             }
+
+            foreach (var rootChild in node.Childs)
+            {
+                if (rootChild.Content.IsPolygonInside(polygon))
+                {
+                    return ArrangePolygon(rootChild, polygon);
+                }
+
+                if (polygon.IsPolygonInside(rootChild.Content))
+                {
+                    node.Childs.Remove(rootChild);
+                    node.Childs.Add(new Node<AbstractPolygon>
+                    {
+                        Content = polygon,
+                        Childs = { rootChild }
+                    });
+                    return true;
+                }
+
+                if (rootChild.Content.IsPolygonCrosses(polygon))
+                {
+                    Error();
+                    return false;
+                }
+            }
+
+            node.Childs.Add(new Node<AbstractPolygon>
+            {
+                Content = polygon
+            });
+            
+            return true;
+        }
+
+        private void Complete(Node<AbstractPolygon> root)
+        {
+            OnComplete?.Invoke(this, root);
         }
 
         private void Error()
         {
-            if (OnError != null)
-            {
-                OnError.Invoke(this, EventArgs.Empty);
-            }
+            OnError?.Invoke(this, EventArgs.Empty);
         }
 
-        private CanvasShape GetBoundingBox(Triangle tr)
+        private CanvasPolygon GetBoundingBox(Node<AbstractPolygon> node)
         {
-            var minX = Math.Min(tr.A.X, Math.Min(tr.B.X, tr.C.X));
-            var maxX = Math.Max(tr.A.X, Math.Max(tr.B.X, tr.C.X));
-            var minY = Math.Min(tr.A.Y, Math.Min(tr.B.Y, tr.C.Y));
-            var maxY = Math.Max(tr.A.Y, Math.Max(tr.B.Y, tr.C.Y));
-
-            return new CanvasShape
+            var minX = Int32.MaxValue;
+            var maxX = Int32.MinValue;
+            var minY = Int32.MaxValue;
+            var maxY = Int32.MinValue;
+            
+            foreach (var child in node.Childs)
+            {
+                minX = Math.Min(minX, child.Content.Points().Min(p => p.X));
+                maxX = Math.Max(maxX, child.Content.Points().Max(p => p.X));
+                minY = Math.Min(minY, child.Content.Points().Min(p => p.Y));
+                maxY = Math.Max(maxY, child.Content.Points().Max(p => p.Y));
+            }
+            return new CanvasPolygon
             {
                 A = new Point(minX, maxY),
                 B = new Point(maxX, maxY),
