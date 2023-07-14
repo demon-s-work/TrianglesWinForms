@@ -22,7 +22,6 @@ namespace TrianglesWinForms.Services
             {
                 Content = new CanvasPolygon()
             };
-            var id = 0;
             foreach (var pl in polygons)
             {
                 if (!ArrangePolygon(root, pl))

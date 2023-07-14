@@ -99,9 +99,6 @@
         <None Include="App.config" />
     </ItemGroup>
     <ItemGroup>
-      <Folder Include="Extensions" />
-    </ItemGroup>
-    <ItemGroup>
       <Content Include="Input\crosses.txt" />
       <Content Include="Input\shaked.txt" />
       <Content Include="Input\valid.txt" />

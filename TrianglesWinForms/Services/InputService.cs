@@ -12,8 +12,7 @@ namespace TrianglesWinForms.Services
         public List<string> GetUserInput()
         {
             List<string> trianglesData;
-            bool inputResult = true;
-
+            
             var importForm = new ImportDataForm();
             if (importForm.ShowDialog() == DialogResult.OK)
             {
