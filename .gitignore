@@ -1,5 +1,5 @@
 ﻿/TrianglesWinForms/bin/*
 /TrianglesWinForms/obj/*
-//.idea
+//.idea/*
 *.exe
 *.pdb
